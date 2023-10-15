@@ -70,16 +70,6 @@ with col1:
         user_input = st.text_input("Type your message here...", value="", key="user_input")
         submit_button = st.form_submit_button("Send")
 
-# Display all previous messages in a scrollable container
-# with col1.container() as scrollable_container:
-#     with st.markdown('<div class="scrollable-container">', unsafe_allow_html=True):
-#     # with st.markdown('<div class="overflow-scroll">'):
-#         st.write(st.session_state.messages)
-#         for message in st.session_state.messages:
-#             st.markdown(f'<p>{message}</p>', unsafe_allow_html=True)
-#     st.markdown('</div>', unsafe_allow_html=True)
-
-
 
 # Get response from OpenAI API and display it
 if submit_button:
@@ -89,6 +79,7 @@ if submit_button:
     bot_message = f"Assistant: {response}"
     st.session_state.messages.append(bot_message)
 
+    st.write('<script>document.querySelector("user_input").value = "";</script>', unsafe_allow_html=True)
     # Clear input after sending the message and rerun the app
     st.rerun()
 
