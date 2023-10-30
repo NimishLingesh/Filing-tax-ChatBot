@@ -20,6 +20,7 @@ def write_to_db(msg):
     # persona, txt = msg[0], msg[1]
     insert_query = "INSERT INTO chatbot (persona, comments) VALUES (%s, %s)"
     cursor.execute(insert_query, msg)
+    connection.commit()
 
 
 # Set up the layout
@@ -95,7 +96,7 @@ with col1:
 # Get response from OpenAI API and display it
 if submit_button:
     user_message = f"User: {user_input}"
-    write_to_db(["User", user_message])
+    write_to_db(["User", user_input])
     st.session_state.messages.append(user_message)
     response = get_openai_response(user_input, st.session_state.messages)
     write_to_db(["Bot", response])
