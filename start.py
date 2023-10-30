@@ -1,5 +1,26 @@
 import streamlit as st
 import openai
+import mysql.connector
+
+db_config = {
+    'host': 'localhost',
+    'port': 3306,
+    'user': 'root',
+    'password': 'admin@1234',
+    'database': 'chatbot_db',  # The name of your database
+}
+
+# Establish a connection to the MySQL server
+connection = mysql.connector.connect(**db_config)
+
+# Create a cursor object to interact with the database
+cursor = connection.cursor()
+
+def write_to_db(msg):
+    # persona, txt = msg[0], msg[1]
+    insert_query = "INSERT INTO chatbot (persona, comments) VALUES (%s, %s)"
+    cursor.execute(insert_query, msg)
+
 
 # Set up the layout
 st.set_page_config(page_title="ChatGPT UI", layout="centered")
@@ -74,8 +95,10 @@ with col1:
 # Get response from OpenAI API and display it
 if submit_button:
     user_message = f"User: {user_input}"
+    write_to_db(["User", user_message])
     st.session_state.messages.append(user_message)
     response = get_openai_response(user_input, st.session_state.messages)
+    write_to_db(["Bot", response])
     bot_message = f"Assistant: {response}"
     st.session_state.messages.append(bot_message)
 
